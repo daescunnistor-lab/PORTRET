@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Model Viewer</title>
+
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.3.1/model-viewer.min.js"></script>
+
+  <style>
+    html, body { margin: 0; height: 100%; font-family: system-ui, -apple-system, sans-serif; }
+
+    model-viewer { width: 100%; height: 100vh; }
+
+    .ar-button {
+      position: absolute;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #111;
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 15px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      cursor: pointer;
+      z-index: 10;
+      box-shadow: 0 6px 18px rgba(0,0,0,.28);
+    }
+    .ar-button svg { width: 20px; height: 20px; }
+
+    .status {
+      position: absolute;
+      bottom: 154px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 88%;
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #b3261e;
+      background: #fff;
+      padding: 10px 16px;
+      border-radius: 10px;
+      z-index: 10;
+      box-shadow: 0 3px 12px rgba(0,0,0,.18);
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <model-viewer
+    id="mv"
+    src="TEST_QR.glb"
+    ar
+    ar-modes="scene-viewer webxr quick-look"
+    ar-scale="auto"
+    camera-controls
+    auto-rotate
+    shadow-intensity="1"
+    alt="Model 3D">
+    <button slot="ar-button" class="ar-button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2 21 7v10l-9 5-9-5V7z"/><path d="M3.3 7 12 12l8.7-5"/><path d="M12 12v10"/>
+      </svg>
+      Vezi în AR
+    </button>
+  </model-viewer>
+
+  <p class="status" id="status"></p>
+
+  <script>
+    const mv = document.getElementById('mv');
+    const status = document.getElementById('status');
+
+    function show(msg) {
+      status.style.display = 'block';
+      status.textContent = msg;
+    }
+
+    mv.addEventListener('load', () => {
+      if (!mv.canActivateAR) {
+        show('AR indisponibil pe acest dispozitiv. Instaleaza sau actualizeaza "Google Play Services for AR" din Play Store, apoi reincarca pagina.');
+      }
+    });
+
+    mv.addEventListener('ar-status', (e) => {
+      if (e.detail.status === 'failed') {
+        show('Lansarea AR a esuat. Verifica "Google Play Services for AR" in Play Store si ca telefonul e compatibil ARCore.');
+      }
+    });
+  </script>
+
+</body>
+</html>
